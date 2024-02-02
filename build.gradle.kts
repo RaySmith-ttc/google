@@ -1,16 +1,17 @@
 plugins {
-    kotlin("jvm") version "1.8.0"
+    kotlin("jvm") version "1.9.10"
     id("maven-publish")
 }
 
 publishing {
     repositories {
         maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/raysmith-ttc/google")
+            name = "OSSRH"
+            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+
             credentials {
-                username = System.getenv("GIT_USERNAME")
-                password = System.getenv("GIT_TOKEN_PUBLISH")
+                username = System.getenv("SONATYPE_USER")
+                password = System.getenv("SONATYPE_PASS")
             }
         }
     }
@@ -23,7 +24,7 @@ publishing {
 
 
 group = "ru.raysmith"
-version = "0.0.1"
+version = "1.0.0"
 
 repositories {
     mavenCentral()

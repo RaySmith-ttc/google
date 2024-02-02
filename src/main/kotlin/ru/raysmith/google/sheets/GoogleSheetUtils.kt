@@ -4,6 +4,7 @@ import com.google.api.services.sheets.v4.Sheets
 import com.google.api.services.sheets.v4.model.*
 import ru.raysmith.google.model.SheetData
 import ru.raysmith.google.model.api.ValueInputOption
+import ru.raysmith.google.sheets.service.GoogleSheetsService
 
 fun Spreadsheet.sheets(setup: SheetsBuilder.() -> Unit) {
     val builder = object : SheetsBuilder {
@@ -70,8 +71,3 @@ fun Spreadsheet.append(rows: List<RowData>, sheetId: Int, service: GoogleSheetsS
 )
 
 fun Spreadsheet.refreshed(service: GoogleSheetsService) = service.SpreadSheets.get(spreadsheetId)
-
-fun request(setup: Request.() -> Unit) = Request().apply(setup)
-fun addSheetRequest(setup: AddSheetRequest.() -> Unit) = AddSheetRequest().apply(setup)
-fun sheetProperties(setup: SheetProperties.() -> Unit) = SheetProperties().apply(setup)
-fun gridRange(setup: GridRange.() -> Unit) = GridRange().apply(setup)

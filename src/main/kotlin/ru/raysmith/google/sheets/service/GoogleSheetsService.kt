@@ -1,4 +1,4 @@
-package ru.raysmith.google.sheets
+package ru.raysmith.google.sheets.service
 
 import com.google.api.services.sheets.v4.Sheets
 import com.google.api.services.sheets.v4.SheetsScopes
@@ -8,6 +8,7 @@ import com.google.auth.oauth2.GoogleCredentials
 import ru.raysmith.google.GoogleUtils
 import ru.raysmith.google.model.api.HorizontalAlign
 import ru.raysmith.google.model.api.WrapStrategy
+import ru.raysmith.google.sheets.SheetService
 
 class GoogleSheetsService(val sheets: Sheets) {
 
@@ -42,7 +43,7 @@ class GoogleSheetsService(val sheets: Sheets) {
     }
 
     val Sheets = SheetService(this, sheets)
-    val SpreadSheets = SpreadSheetsService(sheets)
+    val SpreadSheets = GoogleSpreadSheetsService(sheets.spreadsheets())
 }
 
 fun List<List<Any>>.contains(value: Any, containsModeData: ContainsModeData = ContainsModeData.FULL) =
