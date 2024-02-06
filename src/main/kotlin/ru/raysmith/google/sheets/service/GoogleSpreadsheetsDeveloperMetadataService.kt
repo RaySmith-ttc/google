@@ -11,7 +11,7 @@ class GoogleSpreadsheetsDeveloperMetadataService(val service: Sheets.Spreadsheet
         setup: Sheets.Spreadsheets.DeveloperMetadata.Get.() -> Unit
     ): DeveloperMetadata = service.get(spreadsheetId, metadataId).apply(setup).execute()
 
-    fun get(
+    fun search(
         spreadsheetId: String, content: SearchDeveloperMetadataRequest,
         setup: Sheets.Spreadsheets.DeveloperMetadata.Search.() -> Unit
     ): SearchDeveloperMetadataResponse = service.search(spreadsheetId, content).apply(setup).execute()

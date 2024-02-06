@@ -9,32 +9,25 @@ import com.google.api.services.sheets.v4.model.GetSpreadsheetByDataFilterRequest
 import com.google.api.services.sheets.v4.model.Spreadsheet
 
 class GoogleSpreadSheetsService(val service: Sheets.Spreadsheets) {
-    val SheetsOperations = GoogleSheetsOperationsService(service.sheets())
     val DeveloperMetadata = GoogleSpreadsheetsDeveloperMetadataService(service.developerMetadata())
+    val SheetsOperations = GoogleSheetsOperationsService(service.sheets())
     val Values = GoogleSheetsValuesService(service.values())
-
-    fun get(spreadsheetId: String, setup: Sheets.Spreadsheets.Get.() -> Unit = { }): Spreadsheet = 
-        service.get(spreadsheetId).apply(setup).execute()
-    
-    fun getByDataFilter(
-        spreadsheetId: String, content: GetSpreadsheetByDataFilterRequest, 
-        setup: Sheets.Spreadsheets.GetByDataFilter.() -> Unit = { }
-    ): Spreadsheet = service.getByDataFilter(spreadsheetId, content).apply(setup).execute()
 
     fun create(content: Spreadsheet, setup: Sheets.Spreadsheets.Create.() -> Unit = { }): Spreadsheet =
         service.create(content).apply(setup).execute()
+
+    fun get(spreadsheetId: String, setup: Sheets.Spreadsheets.Get.() -> Unit = { }): Spreadsheet =
+        service.get(spreadsheetId).apply(setup).execute()
+
+    fun getByDataFilter(
+        spreadsheetId: String, content: GetSpreadsheetByDataFilterRequest,
+        setup: Sheets.Spreadsheets.GetByDataFilter.() -> Unit = { }
+    ): Spreadsheet = service.getByDataFilter(spreadsheetId, content).apply(setup).execute()
 
     fun batchUpdate(
         spreadsheetId: String, content: BatchUpdateSpreadsheetRequest,
         setup: Sheets.Spreadsheets.BatchUpdate.() -> Unit = { }
     ): BatchUpdateSpreadsheetResponse = service.batchUpdate(spreadsheetId, content).apply(setup).execute()
-
-//    fun create(title: String, setup: Spreadsheet.() -> Unit = { }): Spreadsheet {
-//        return sheets.create(Spreadsheet().apply {
-//            this.properties = SpreadsheetProperties().setTitle(title)
-//            setup()
-//        }).execute()
-//    }
 }
 
 fun GoogleSpreadSheetsService.copy(id: String, drive: Drive, content: File? = null, setup: Drive.Files.Copy.() -> Unit): File? {

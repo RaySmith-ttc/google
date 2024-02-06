@@ -5,7 +5,7 @@ import com.google.api.services.sheets.v4.model.CopySheetToAnotherSpreadsheetRequ
 import com.google.api.services.sheets.v4.model.SheetProperties
 
 class GoogleSheetsOperationsService(val service: Sheets.Spreadsheets.SheetsOperations) {
-    fun get(
+    fun copyTo(
         spreadsheetId: String, sheetId: Int, content: CopySheetToAnotherSpreadsheetRequest,
         setup: Sheets.Spreadsheets.SheetsOperations.CopyTo.() -> Unit
     ): SheetProperties = service.copyTo(spreadsheetId, sheetId, content).apply(setup).execute()

@@ -24,7 +24,7 @@ fun RowData.cell(text: String?, format: CellFormat = defaultCellFormat, setup: C
 
 fun RowData.emptyCell(format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit = {}) = cell(null, format, setup)
 
-fun RowData.linkCell(text: String? = null, link: String? = null, format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit = {}) = cell {
+fun RowData.linkCell(text: String? = null, link: String? = null, format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit = {}) = cell(cell {
     if (link != null) {
         extendedValue {
             formulaValue = hyperlink(link, text ?: link)
@@ -37,7 +37,7 @@ fun RowData.linkCell(text: String? = null, link: String? = null, format: CellFor
         setTextFormat(TextFormat())
     }
     setup()
-}
+})
 
 //fun RowData.boldCell(text: String? = null, horizontalAlignment: HorizontalAlign = HorizontalAlign.LEFT, format: CellFormat.() -> Unit = defaultCellFormat, setup: CellData.() -> Unit = {}) = cell {
 //    userEnteredValue = ExtendedValue().setStringValue(this@boldCell)
@@ -64,7 +64,7 @@ fun RowData.linkCell(text: String? = null, link: String? = null, format: CellFor
 //    }
 //}
 
-fun RowData.photoCell(url: String, format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit = {}) = cell {
+fun RowData.photoCell(url: String, format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit = {}) = cell(cell {
     extendedValue {
         formulaValue = "=IMAGE(\"$url\")"
     }
@@ -72,7 +72,7 @@ fun RowData.photoCell(url: String, format: CellFormat = defaultCellFormat, setup
         setTextFormat(TextFormat())
     }
     setup()
-}
+})
 
 
 // -------------------------------------------------- Builders ---------------------------------------------------------
