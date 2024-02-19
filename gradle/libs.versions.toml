@@ -1,5 +1,15 @@
+[versions]
+javaparser = "3.25.8"
+
 [libraries]
 google-authClient = { module = "com.google.oauth-client:google-oauth-client-jetty", version = "1.35.0" }
 google-apis-sheets = { module = "com.google.apis:google-api-services-sheets", version = "v4-rev20230815-2.0.0" }
 google-apis-drive = { module = "com.google.apis:google-api-services-drive", version = "v3-rev20240123-2.0.0" }
 google-auth-oauth2 = { module = "com.google.auth:google-auth-library-oauth2-http", version = "1.22.0" }
+konsist = { module = "com.lemonappdev:konsist", version = "0.13.0" }
+javaparser-core = { module = "com.github.javaparser:javaparser-core", version.ref = "javaparser" }
+javaparser-core-serialization = { module = "com.github.javaparser:javaparser-core-serialization", version.ref = "javaparser" }
+
+[plugins]
+nmcp = { id = "com.gradleup.nmcp", version = "0.0.4" }
+nexus-staging = { id = "io.codearte.nexus-staging", version = "0.30.0" }

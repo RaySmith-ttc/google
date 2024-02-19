@@ -1,32 +1,14 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     kotlin("jvm") version "1.9.10"
     `maven-publish`
     signing
+    alias(libs.plugins.nmcp)
+    alias(libs.plugins.nexus.staging)
 }
 
-//publishing {
-//
-//    repositories {
-//        maven {
-//            name = "OSSRH"
-//            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-//
-//            credentials {
-//                username = System.getenv("SONATYPE_USER")
-//                password = System.getenv("SONATYPE_PASS")
-//            }
-//        }
-//    }
-//    publications {
-//        register<MavenPublication>("gpr") {
-//            from(components["java"])
-//        }
-//    }
-//}
-
-
 group = "ru.raysmith"
-version = "1.0.0"
+version = "1.1.0"
 
 repositories {
     mavenCentral()
@@ -42,14 +24,12 @@ dependencies {
     implementation(libs.google.apis.sheets)
     implementation(libs.google.apis.drive)
     implementation(libs.google.auth.oauth2)
+
+    testImplementation(kotlin("test"))
+    testImplementation(libs.konsist)
+    testImplementation(libs.javaparser.core)
+    testImplementation(libs.javaparser.core.serialization)
 }
-
-artifacts {
-    add("archives", tasks["javadocJar"])
-    add("archives", tasks["sourcesJar"])
-}
-
-
 
 tasks {
     test {
@@ -113,8 +93,17 @@ publishing {
     }
 }
 
+nmcp {
+    publish("release") {
+        username.set(System.getenv("CENTRAL_SONATYPE_USER"))
+        password.set(System.getenv("CENTRAL_SONATYPE_PASS"))
+        publicationType.set("USER_MANAGED")
+        publicationType.set("AUTOMATIC")
+    }
+}
+
+
 signing {
-//    useInMemoryPgpKeys()
     sign(configurations.archives.get())
     sign(publishing.publications["release"])
 }
