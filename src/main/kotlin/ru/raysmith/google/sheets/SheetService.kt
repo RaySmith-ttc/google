@@ -21,26 +21,26 @@ class SheetService(private val spreadsheetService: GoogleSheetsService, val serv
             )))
         .execute().replies.first().addSheet
 
-    fun getOrCreate(spreadsheet: Spreadsheet, sheetTitle: String, headers: List<CellData> = emptyList()): Sheet {
+    fun getOrCreate(spreadsheet: Spreadsheet, sheetTitle: String, headers: RowData? = null): Sheet {
         return find(spreadsheet, sheetTitle) ?: run {
             val newSheetResponse = create(spreadsheet, sheetTitle).properties.sheetId
             find(spreadsheet.refreshed(spreadsheetService), newSheetResponse)!!.also { newSheet ->
-                val data = table {
-                    row {
-                        cells(*headers.toTypedArray())
+                if (headers != null) {
+                    val data = table {
+                        rows.add(headers)
                     }
+
+                    val req = Request().setAppendCells(
+                        AppendCellsRequest()
+                            .setFields("*")
+                            .setRows(data)
+                            .setSheetId(newSheet.properties.sheetId)
+                    )
+
+                    service.spreadsheets()
+                        .batchUpdate(spreadsheet.spreadsheetId, BatchUpdateSpreadsheetRequest().setRequests(listOf(req)))
+                        .execute()
                 }
-
-                val req = Request().setAppendCells(
-                    AppendCellsRequest()
-                        .setFields("*")
-                        .setRows(data)
-                        .setSheetId(newSheet.properties.sheetId)
-                )
-
-                service.spreadsheets()
-                    .batchUpdate(spreadsheet.spreadsheetId, BatchUpdateSpreadsheetRequest().setRequests(listOf(req)))
-                    .execute()
             }
         }
     }

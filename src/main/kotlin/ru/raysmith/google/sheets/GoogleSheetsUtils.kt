@@ -1,56 +1,153 @@
 package ru.raysmith.google.sheets
 
+import com.google.api.services.sheets.v4.Sheets
 import com.google.api.services.sheets.v4.model.*
+import ru.raysmith.google.model.SheetData
+import ru.raysmith.google.model.api.ValueInputOption
+import ru.raysmith.google.sheets.service.GoogleSheetsService
 
-fun request(setup: Request.() -> Unit) = Request().apply(setup)
-fun addSheetRequest(setup: AddSheetRequest.() -> Unit) = AddSheetRequest().apply(setup)
-fun sheetProperties(setup: SheetProperties.() -> Unit) = SheetProperties().apply(setup)
-fun batchUpdateSpreadsheetRequest(setup: BatchUpdateSpreadsheetRequest.() -> Unit) = BatchUpdateSpreadsheetRequest().apply(setup)
+fun Spreadsheet.sheets(setup: SheetsBuilder.() -> Unit) {
+    val builder = object : SheetsBuilder {
+        private val all = mutableListOf<Sheet>()
+        override fun getAll(): List<Sheet> = all
+        override fun sheet(setup: Sheet.() -> Unit) {
+            all.add(Sheet().apply(setup))
+        }
+    }
+    
+    this.sheets = builder.apply(setup).getAll()
+}
+
+fun Spreadsheet.getRangeFromSheetId(sheetId: Int): String {
+    return sheets.find { it.properties.sheetId == sheetId }?.properties?.title
+        ?: error("Sheet with id $sheetId not found in spreadsheet $spreadsheetId")
+}
+
+fun Sheet.properties(setup: SheetProperties.() -> Unit) {
+    this.properties = SheetProperties().apply(setup)
+}
+
+fun table(setup: SheetData.() -> Unit): List<RowData> {
+    return SheetData().apply(setup).rows
+}
+
+fun SheetData.row(row: RowData) {
+    rows.add(row)
+}
+fun SheetData.row(setup: RowData.() -> Unit) {
+    rows.add(RowData().apply(setup))
+}
+fun row(setup: RowData.() -> Unit): RowData {
+    return RowData().apply(setup)
+}
+
+fun RowData.cells(vararg cells: CellData?) {
+    val fixed = cells.toList().toMutableList()
+    fixed.forEachIndexed { index, data ->
+        if (data == null) {
+            fixed[index] = CellData()
+        }
+    }
+    
+    setValues(fixed)
+}
+
+fun Sheets.Spreadsheets.Values.Update.setValueInputOption(option: ValueInputOption) = apply {
+    valueInputOption = option.name
+}
+
+fun Sheets.Spreadsheets.Values.Append.setValueInputOption(option: ValueInputOption) = apply {
+    valueInputOption = option.name
+}
+
+fun Spreadsheet.append(rows: List<RowData>, sheet: Sheet, service: GoogleSheetsService) = append(rows, sheet.properties.sheetId, service)
+fun Spreadsheet.append(rows: List<RowData>, sheetId: Int, service: GoogleSheetsService) = service.requests(
+    spreadsheetId, Request().setAppendCells(
+        AppendCellsRequest()
+            .setFields("*")
+            .setRows(rows)
+            .setSheetId(sheetId)
+    )
+)
+
+fun Spreadsheet.refreshed(service: GoogleSheetsService) = service.SpreadSheets.get(spreadsheetId)
+
+val Sheet.sheetId get() = properties.sheetId
+
+fun CellFormat.merge(other: CellFormat, deep: Boolean): CellFormat = if (deep) this % other else this / other
+
+infix operator fun CellFormat.div(other: CellFormat) = cellFormat {
+    backgroundColor = other.backgroundColor ?: this@div.backgroundColor
+    backgroundColorStyle = other.backgroundColorStyle ?: this@div.backgroundColorStyle
+    borders = other.borders ?: this@div.borders
+    horizontalAlignment = other.horizontalAlignment ?: this@div.horizontalAlignment
+    hyperlinkDisplayType = other.hyperlinkDisplayType ?: this@div.hyperlinkDisplayType
+    numberFormat = other.numberFormat ?: this@div.numberFormat
+    padding = other.padding ?: this@div.padding
+    textDirection = other.textDirection ?: this@div.textDirection
+    textFormat = other.textFormat ?: this@div.textFormat
+    textRotation = other.textRotation ?: this@div.textRotation
+    verticalAlignment = other.verticalAlignment ?: this@div.verticalAlignment
+    wrapStrategy = other.wrapStrategy ?: this@div.wrapStrategy
+}
+
+infix operator fun CellFormat.rem(other: CellFormat) = cellFormat {
+    fun <T> select(selector: CellFormat.() -> T?): T? {
+        val o = other.selector()
+        val t = this@rem.selector()
+        return when {
+            t == null -> o
+            o == null -> t
+            else -> o
+        }
+    }
+
+    backgroundColor = select { backgroundColor }
+    backgroundColorStyle = colorStyle {
+        rgbColor = select { backgroundColorStyle.rgbColor }
+        themeColor = select { backgroundColorStyle.themeColor }
+    }
+    borders = borders {
+        top = select { borders.top }
+        bottom = select { borders.bottom }
+        left = select { borders.left }
+        right = select { borders.right }
+    }
+    horizontalAlignment = select { horizontalAlignment }
+    hyperlinkDisplayType = select { hyperlinkDisplayType }
+    numberFormat = numberFormat {
+        type = select { numberFormat.type }
+        pattern = select { numberFormat.pattern }
+    }
+    padding = padding {
+        top = select { padding.top }
+        bottom = select { padding.bottom }
+        left = select { padding.left }
+        right = select { padding.right }
+    }
+    textDirection = select { textDirection }
+    textFormat = textFormat {
+        bold = select { textFormat.bold }
+        fontFamily = select { textFormat.fontFamily }
+        fontSize = select { textFormat.fontSize }
+        foregroundColor = select { textFormat.foregroundColor }
+        foregroundColorStyle = colorStyle {
+            rgbColor = select { textFormat.foregroundColorStyle.rgbColor }
+            themeColor = select { textFormat.foregroundColorStyle.themeColor }
+        }
+        italic = select { textFormat.italic }
+        link = select { textFormat.link }
+        strikethrough = select { textFormat.strikethrough }
+        underline = select { textFormat.underline }
+    }
+    textRotation = textRotation {
+        angle = select { textRotation.angle }
+        vertical = select { textRotation.vertical }
+    }
+    verticalAlignment = select { verticalAlignment }
+    wrapStrategy = select { wrapStrategy }
+}
+
 fun BatchUpdateSpreadsheetRequest.request(setup: Request.() -> Unit) {
     setRequests(requests.apply { add(ru.raysmith.google.sheets.request { setup() }) })
 }
-fun updateCellsRequest(setup: UpdateCellsRequest.() -> Unit) = UpdateCellsRequest().apply(setup)
-fun gridCoordinate(setup: GridCoordinate.() -> Unit) = GridCoordinate().apply(setup)
-fun getSpreadsheetByDataFilterRequest(setup: GetSpreadsheetByDataFilterRequest.() -> Unit) = GetSpreadsheetByDataFilterRequest().apply(setup)
-fun dataFilter(setup: DataFilter.() -> Unit) = DataFilter().apply(setup)
-fun developerMetadataLookup(setup: DeveloperMetadataLookup.() -> Unit) = DeveloperMetadataLookup().apply(setup)
-fun dimensionRange(setup: DimensionRange.() -> Unit) = DimensionRange().apply(setup)
-fun spreadsheet(setup: Spreadsheet.() -> Unit) = Spreadsheet().apply(setup)
-fun developerMetadata(setup: DeveloperMetadata.() -> Unit) = DeveloperMetadata().apply(setup)
-fun developerMetadataLocation(setup: DeveloperMetadataLocation.() -> Unit) = DeveloperMetadataLocation().apply(setup)
-fun namedRange(setup: NamedRange.() -> Unit) = NamedRange().apply(setup)
-fun gridRange(setup: GridRange.() -> Unit) = GridRange().apply(setup)
-fun spreadsheetProperties(setup: SpreadsheetProperties.() -> Unit) = SpreadsheetProperties().apply(setup)
-fun iterativeCalculationSettings(setup: IterativeCalculationSettings.() -> Unit) = IterativeCalculationSettings().apply(setup)
-fun cellFormat(setup: CellFormat.() -> Unit) = CellFormat().apply(setup)
-fun color(setup: Color.() -> Unit) = Color().apply(setup)
-fun colorStyle(setup: ColorStyle.() -> Unit) = ColorStyle().apply(setup)
-fun borders(setup: Borders.() -> Unit) = Borders().apply(setup)
-fun border(setup: Border.() -> Unit) = Border().apply(setup)
-fun numberFormat(setup: NumberFormat.() -> Unit) = NumberFormat().apply(setup)
-fun padding(setup: Padding.() -> Unit) = Padding().apply(setup)
-fun textFormat(setup: TextFormat.() -> Unit) = TextFormat().apply(setup)
-fun link(setup: Link.() -> Unit) = Link().apply(setup)
-fun textRotation(setup: TextRotation.() -> Unit) = TextRotation().apply(setup)
-fun sheet(setup: Sheet.() -> Unit) = Sheet().apply(setup)
-fun dataSource(setup: DataSource.() -> Unit) = DataSource().apply(setup)
-fun dataSourceSpec(setup: DataSourceSpec.() -> Unit) = DataSourceSpec().apply(setup)
-fun dataSourceParameter(setup: DataSourceParameter.() -> Unit) = DataSourceParameter().apply(setup)
-fun bigQueryDataSourceSpec(setup: BigQueryDataSourceSpec.() -> Unit) = BigQueryDataSourceSpec().apply(setup)
-fun bigQueryQuerySpec(setup: BigQueryQuerySpec.() -> Unit) = BigQueryQuerySpec().apply(setup)
-fun bigQueryTableSpec(setup: BigQueryTableSpec.() -> Unit) = BigQueryTableSpec().apply(setup)
-fun dataSourceColumn(setup: DataSourceColumn.() -> Unit) = DataSourceColumn().apply(setup)
-fun dataSourceColumnReference(setup: DataSourceColumnReference.() -> Unit) = DataSourceColumnReference().apply(setup)
-fun dataSourceRefreshSchedule(setup: DataSourceRefreshSchedule.() -> Unit) = DataSourceRefreshSchedule().apply(setup)
-fun interval(setup: Interval.() -> Unit) = Interval().apply(setup)
-fun dataSourceRefreshWeeklySchedule(setup: DataSourceRefreshWeeklySchedule.() -> Unit) = DataSourceRefreshWeeklySchedule().apply(setup)
-fun dataSourceRefreshMonthlySchedule(setup: DataSourceRefreshMonthlySchedule.() -> Unit) = DataSourceRefreshMonthlySchedule().apply(setup)
-fun dataSourceRefreshDailySchedule(setup: DataSourceRefreshDailySchedule.() -> Unit) = DataSourceRefreshDailySchedule().apply(setup)
-fun timeOfDay(setup: TimeOfDay.() -> Unit) = TimeOfDay().apply(setup)
-fun valueRange(setup: ValueRange.() -> Unit) = ValueRange().apply(setup)
-fun clearValuesRequest(setup: ClearValuesRequest.() -> Unit) = ClearValuesRequest().apply(setup)
-fun batchUpdateValuesRequest(setup: BatchUpdateValuesRequest.() -> Unit) = BatchUpdateValuesRequest().apply(setup)
-fun batchUpdateValuesByDataFilterRequest(setup: BatchUpdateValuesByDataFilterRequest.() -> Unit) = BatchUpdateValuesByDataFilterRequest().apply(setup)
-fun batchClearValuesRequest(setup: BatchClearValuesRequest.() -> Unit) = BatchClearValuesRequest().apply(setup)
-fun batchClearValuesByDataFilterRequest(setup: BatchClearValuesByDataFilterRequest.() -> Unit) = BatchClearValuesByDataFilterRequest().apply(setup)
-fun batchGetValuesByDataFilterRequest(setup: BatchGetValuesByDataFilterRequest.() -> Unit) = BatchGetValuesByDataFilterRequest().apply(setup)

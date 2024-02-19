@@ -17,7 +17,7 @@ fun RowData.cell(cell: CellData?) {
 fun RowData.cell(text: String?, format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit = {}) = cell(cell {
     userEnteredValue = ExtendedValue().setStringValue(text ?: "")
     userEnteredFormat(format.clone()) {
-        setTextFormat(TextFormat())
+        setTextFormat(format.textFormat ?: TextFormat())
     }
     setup()
 })
@@ -34,48 +34,22 @@ fun RowData.linkCell(text: String? = null, link: String? = null, format: CellFor
     }
 
     userEnteredFormat(format.clone()) {
-        setTextFormat(TextFormat())
+        setTextFormat(format.textFormat ?: TextFormat())
     }
     setup()
 })
-
-//fun RowData.boldCell(text: String? = null, horizontalAlignment: HorizontalAlign = HorizontalAlign.LEFT, format: CellFormat.() -> Unit = defaultCellFormat, setup: CellData.() -> Unit = {}) = cell {
-//    userEnteredValue = ExtendedValue().setStringValue(this@boldCell)
-//    userEnteredFormat = CellFormat().setTextFormat(TextFormat().setBold(true)).apply {
-//        this.horizontalAlignment = horizontalAlignment.name
-//        wrapStrategy = WrapStrategy.WRAP.name
-//    }
-//}
-//
-//fun String.boldCell(horizontalAlignment: HorizontalAlign = HorizontalAlign.LEFT) = CellData().apply {
-//    userEnteredValue = ExtendedValue().setStringValue(this@boldCell)
-//    userEnteredFormat = CellFormat().setTextFormat(TextFormat().setBold(true)).apply {
-//        this.horizontalAlignment = horizontalAlignment.name
-//        wrapStrategy = WrapStrategy.WRAP.name
-//    }
-//}
-//
-//
-//fun String?.textCell(horizontalAlignment: HorizontalAlign = HorizontalAlign.LEFT, wrapStrategy: WrapStrategy = WrapStrategy.WRAP) = CellData().apply {
-//    userEnteredValue = ExtendedValue().setStringValue(this@textCell ?: "")
-//    userEnteredFormat = CellFormat().setTextFormat(TextFormat()).apply {
-//        this.horizontalAlignment = horizontalAlignment.name
-//        this.wrapStrategy = wrapStrategy.name
-//    }
-//}
 
 fun RowData.photoCell(url: String, format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit = {}) = cell(cell {
     extendedValue {
         formulaValue = "=IMAGE(\"$url\")"
     }
     userEnteredFormat(format.clone()) {
-        setTextFormat(TextFormat())
+        setTextFormat(format.textFormat ?: TextFormat())
     }
     setup()
 })
 
-
-// -------------------------------------------------- Builders ---------------------------------------------------------
+// -------------------------------------------------- DSL---------------------------------------------------------------
 
 fun CellData.extendedValue(setup: ExtendedValue.() -> Unit) {
     userEnteredValue = ExtendedValue().apply(setup)
@@ -92,7 +66,3 @@ fun cellFormat(parent: CellFormat = defaultCellFormat, setup: CellFormat.() -> U
 // ---------------------------------------------------------------------------------------------------------------------
 
 fun hyperlink(link: String, text: String) = "=HYPERLINK(\"$link\";\"$text\")"
-
-// ---------------------------------------------------------------------------------------------------------------------
-
-fun appendCellsRequest(setup: AppendCellsRequest.() -> Unit) = AppendCellsRequest().apply(setup)

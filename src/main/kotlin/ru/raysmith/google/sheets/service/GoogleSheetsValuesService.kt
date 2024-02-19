@@ -62,3 +62,8 @@ fun GoogleSheetsValuesService.get(
     spreadsheetId: String, range: Range,
     setup: Sheets.Spreadsheets.Values.Get.() -> Unit = { }
 ): List<List<Any>> = service.get(spreadsheetId, range.toString()).apply(setup).execute().getValues()
+
+fun GoogleSheetsValuesService.update(
+    spreadsheetId: String, range: Range, content: ValueRange,
+    setup: Sheets.Spreadsheets.Values.Update.() -> Unit = { }
+) = update(spreadsheetId, range.toString(), content, setup)

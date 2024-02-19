@@ -59,3 +59,9 @@ enum class WrapStrategy {
 fun CellFormat.setWrapStrategy(wrapStrategy: WrapStrategy) {
     setWrapStrategy(wrapStrategy.name)
 }
+
+var CellFormat.wrapStrategyE: WrapStrategy?
+    get() = this.wrapStrategy?.let { WrapStrategy.valueOf(it) }
+    set(value) {
+        this.wrapStrategy = value?.name
+    }

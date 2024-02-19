@@ -1,5 +1,10 @@
 package ru.raysmith.google.model.api
 
+import com.google.api.services.sheets.v4.Sheets
+import com.google.api.services.sheets.v4.model.BatchGetValuesByDataFilterRequest
+import com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest
+import ru.raysmith.google.snakeCased
+
 /** Determines how values should be rendered in the output. */
 enum class ValueRenderOption {
     /** Values will be calculated & formatted in the reply according to the cell's formatting. Formatting is based on the spreadsheet's locale, not the requesting user's locale. For example, if A1 is 1.23 and A2 is =A1 and formatted as currency, then A2 would return "$1.23". */
@@ -11,3 +16,51 @@ enum class ValueRenderOption {
     /** Values will not be calculated. The reply will include the formulas. For example, if A1 is 1.23 and A2 is =A1 and formatted as currency, then A2 would return "=A1". */
     FORMULA
 }
+
+fun Sheets.Spreadsheets.Values.Get.setValueRenderOption(valueRenderOption: ValueRenderOption) {
+    setValueRenderOption(valueRenderOption.snakeCased())
+}
+
+var Sheets.Spreadsheets.Values.Get.valueRenderOptionE: ValueRenderOption?
+    get() = valueRenderOption?.let { ValueRenderOption.valueOf(it) }
+    set(value) { valueRenderOption = value?.snakeCased() }
+
+fun Sheets.Spreadsheets.Values.BatchGet.setValueRenderOption(valueRenderOption: ValueRenderOption) {
+    setValueRenderOption(valueRenderOption.snakeCased())
+}
+
+var Sheets.Spreadsheets.Values.BatchGet.valueRenderOptionE: ValueRenderOption?
+    get() = valueRenderOption?.let { ValueRenderOption.valueOf(it) }
+    set(value) { valueRenderOption = value?.snakeCased() }
+
+fun BatchGetValuesByDataFilterRequest.setValueRenderOption(valueRenderOption: ValueRenderOption) {
+    setValueRenderOption(valueRenderOption.snakeCased())
+}
+
+var BatchGetValuesByDataFilterRequest.valueRenderOptionE: ValueRenderOption?
+    get() = valueRenderOption?.let { ValueRenderOption.valueOf(it) }
+    set(value) { valueRenderOption = value?.snakeCased() }
+
+fun Sheets.Spreadsheets.Values.Append.setResponseValueRenderOption(responseValueRenderOption: ValueRenderOption) {
+    setResponseValueRenderOption(responseValueRenderOption.snakeCased())
+}
+
+var Sheets.Spreadsheets.Values.Append.responseValueRenderOptionE: ValueRenderOption?
+    get() = responseValueRenderOption?.let { ValueRenderOption.valueOf(it) }
+    set(value) { responseValueRenderOption = value?.snakeCased() }
+
+fun Sheets.Spreadsheets.Values.Update.setResponseValueRenderOption(responseValueRenderOption: ValueRenderOption) {
+    setResponseValueRenderOption(responseValueRenderOption.snakeCased())
+}
+
+var Sheets.Spreadsheets.Values.Update.responseValueRenderOptionE: ValueRenderOption?
+    get() = responseValueRenderOption?.let { ValueRenderOption.valueOf(it) }
+    set(value) { responseValueRenderOption = value?.snakeCased() }
+
+fun BatchUpdateValuesRequest.setResponseValueRenderOption(responseValueRenderOption: ValueRenderOption) {
+    setResponseValueRenderOption(responseValueRenderOption.snakeCased())
+}
+
+var BatchUpdateValuesRequest.responseValueRenderOptionE: ValueRenderOption?
+    get() = responseValueRenderOption?.let { ValueRenderOption.valueOf(it) }
+    set(value) { responseValueRenderOption = value?.snakeCased() }

@@ -2,21 +2,23 @@ package ru.raysmith.google.sheets.service
 
 import com.google.api.services.sheets.v4.Sheets
 import com.google.api.services.sheets.v4.SheetsScopes
-import com.google.api.services.sheets.v4.model.*
+import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest
+import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetResponse
+import com.google.api.services.sheets.v4.model.CellFormat
+import com.google.api.services.sheets.v4.model.Request
 import com.google.auth.http.HttpCredentialsAdapter
 import com.google.auth.oauth2.GoogleCredentials
 import ru.raysmith.google.GoogleUtils
-import ru.raysmith.google.model.api.HorizontalAlign
-import ru.raysmith.google.model.api.WrapStrategy
 import ru.raysmith.google.sheets.SheetService
+import ru.raysmith.google.sheets.cellFormat
+import ru.raysmith.google.sheets.textFormat
 
 class GoogleSheetsService(val sheets: Sheets) {
 
     companion object {
         object Config {
-            var defaultCellFormat: CellFormat = CellFormat().setTextFormat(TextFormat()).apply {
-                this.horizontalAlignment = HorizontalAlign.LEFT.name
-                this.wrapStrategy = WrapStrategy.WRAP.name
+            var defaultCellFormat: CellFormat = cellFormat {
+                textFormat = textFormat {  }
             }
         }
 

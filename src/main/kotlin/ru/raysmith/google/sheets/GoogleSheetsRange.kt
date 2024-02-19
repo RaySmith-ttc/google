@@ -1,4 +1,4 @@
-package ru.raysmith.google.model.api
+package ru.raysmith.google.sheets
 
 class GoogleSheetsRange {
 
