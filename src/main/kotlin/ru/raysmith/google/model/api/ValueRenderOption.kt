@@ -2,8 +2,8 @@ package ru.raysmith.google.model.api
 
 import com.google.api.services.sheets.v4.Sheets
 import com.google.api.services.sheets.v4.model.BatchGetValuesByDataFilterRequest
+import com.google.api.services.sheets.v4.model.BatchUpdateValuesByDataFilterRequest
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest
-import ru.raysmith.google.snakeCased
 
 /** Determines how values should be rendered in the output. */
 enum class ValueRenderOption {
@@ -17,50 +17,101 @@ enum class ValueRenderOption {
     FORMULA
 }
 
-fun Sheets.Spreadsheets.Values.Get.setValueRenderOption(valueRenderOption: ValueRenderOption) {
-    setValueRenderOption(valueRenderOption.snakeCased())
-}
+/**
+ * Determines how values in the response should be rendered.
+ * The default render option is [ValueRenderOption.FORMATTED_VALUE].
+ * */
+fun Sheets.Spreadsheets.Values.Append.setResponseValueRenderOption(responseValueRenderOption: ValueRenderOption) =
+    setResponseValueRenderOption(responseValueRenderOption.name)
 
-var Sheets.Spreadsheets.Values.Get.valueRenderOptionE: ValueRenderOption?
-    get() = valueRenderOption?.let { ValueRenderOption.valueOf(it) }
-    set(value) { valueRenderOption = value?.snakeCased() }
-
-fun Sheets.Spreadsheets.Values.BatchGet.setValueRenderOption(valueRenderOption: ValueRenderOption) {
-    setValueRenderOption(valueRenderOption.snakeCased())
-}
-
-var Sheets.Spreadsheets.Values.BatchGet.valueRenderOptionE: ValueRenderOption?
-    get() = valueRenderOption?.let { ValueRenderOption.valueOf(it) }
-    set(value) { valueRenderOption = value?.snakeCased() }
-
-fun BatchGetValuesByDataFilterRequest.setValueRenderOption(valueRenderOption: ValueRenderOption) {
-    setValueRenderOption(valueRenderOption.snakeCased())
-}
-
-var BatchGetValuesByDataFilterRequest.valueRenderOptionE: ValueRenderOption?
-    get() = valueRenderOption?.let { ValueRenderOption.valueOf(it) }
-    set(value) { valueRenderOption = value?.snakeCased() }
-
-fun Sheets.Spreadsheets.Values.Append.setResponseValueRenderOption(responseValueRenderOption: ValueRenderOption) {
-    setResponseValueRenderOption(responseValueRenderOption.snakeCased())
-}
-
+/**
+ * Determines how values in the response should be rendered.
+ * The default render option is [ValueRenderOption.FORMATTED_VALUE].
+ * */
 var Sheets.Spreadsheets.Values.Append.responseValueRenderOptionE: ValueRenderOption?
     get() = responseValueRenderOption?.let { ValueRenderOption.valueOf(it) }
-    set(value) { responseValueRenderOption = value?.snakeCased() }
+    set(value) { responseValueRenderOption = value?.name }
 
-fun Sheets.Spreadsheets.Values.Update.setResponseValueRenderOption(responseValueRenderOption: ValueRenderOption) {
-    setResponseValueRenderOption(responseValueRenderOption.snakeCased())
-}
 
-var Sheets.Spreadsheets.Values.Update.responseValueRenderOptionE: ValueRenderOption?
-    get() = responseValueRenderOption?.let { ValueRenderOption.valueOf(it) }
-    set(value) { responseValueRenderOption = value?.snakeCased() }
 
-fun BatchUpdateValuesRequest.setResponseValueRenderOption(responseValueRenderOption: ValueRenderOption) {
-    setResponseValueRenderOption(responseValueRenderOption.snakeCased())
-}
+/** How values should be represented in the output. The default render option is [ValueRenderOption.FORMATTED_VALUE]. */
+fun Sheets.Spreadsheets.Values.BatchGet.setValueRenderOption(valueRenderOption: ValueRenderOption) =
+    setValueRenderOption(valueRenderOption.name)
 
+/** How values should be represented in the output. The default render option is [ValueRenderOption.FORMATTED_VALUE]. */
+var Sheets.Spreadsheets.Values.BatchGet.valueRenderOptionE: ValueRenderOption?
+    get() = valueRenderOption?.let { ValueRenderOption.valueOf(it) }
+    set(value) { valueRenderOption = value?.name }
+
+
+
+/** How values should be represented in the output. The default render option is [ValueRenderOption.FORMATTED_VALUE]. */
+fun BatchGetValuesByDataFilterRequest.setValueRenderOption(valueRenderOption: ValueRenderOption) =
+    setValueRenderOption(valueRenderOption.name)
+
+/** How values should be represented in the output. The default render option is [ValueRenderOption.FORMATTED_VALUE]. */
+var BatchGetValuesByDataFilterRequest.valueRenderOptionE: ValueRenderOption?
+    get() = valueRenderOption?.let { ValueRenderOption.valueOf(it) }
+    set(value) { valueRenderOption = value?.name }
+
+
+
+/**
+ * Determines how values in the response should be rendered.
+ * The default render option is [ValueRenderOption.FORMATTED_VALUE].
+ * */
+fun BatchUpdateValuesRequest.setResponseValueRenderOption(responseValueRenderOption: ValueRenderOption) =
+    setResponseValueRenderOption(responseValueRenderOption.name)
+
+/**
+ * Determines how values in the response should be rendered.
+ * The default render option is [ValueRenderOption.FORMATTED_VALUE].
+ * */
 var BatchUpdateValuesRequest.responseValueRenderOptionE: ValueRenderOption?
     get() = responseValueRenderOption?.let { ValueRenderOption.valueOf(it) }
-    set(value) { responseValueRenderOption = value?.snakeCased() }
+    set(value) { responseValueRenderOption = value?.name }
+
+
+
+/**
+ * Determines how values in the response should be rendered.
+ * The default render option is [ValueRenderOption.FORMATTED_VALUE].
+ * */
+fun BatchUpdateValuesByDataFilterRequest.setResponseValueRenderOption(responseValueRenderOption: ValueRenderOption) =
+    setResponseValueRenderOption(responseValueRenderOption.name)
+
+/**
+ * Determines how values in the response should be rendered.
+ * The default render option is [ValueRenderOption.FORMATTED_VALUE].
+ * */
+var BatchUpdateValuesByDataFilterRequest.responseValueRenderOptionE: ValueRenderOption?
+    get() = responseValueRenderOption?.let { ValueRenderOption.valueOf(it) }
+    set(value) { responseValueRenderOption = value?.name }
+
+
+
+/** How values should be represented in the output. The default render option is [ValueRenderOption.FORMATTED_VALUE]. */
+fun Sheets.Spreadsheets.Values.Get.setValueRenderOption(valueRenderOption: ValueRenderOption) =
+    setValueRenderOption(valueRenderOption.name)
+
+/** How values should be represented in the output. The default render option is [ValueRenderOption.FORMATTED_VALUE]. */
+var Sheets.Spreadsheets.Values.Get.valueRenderOptionE: ValueRenderOption?
+    get() = valueRenderOption?.let { ValueRenderOption.valueOf(it) }
+    set(value) { valueRenderOption = value?.name }
+
+
+
+/**
+ * Determines how values in the response should be rendered.
+ * The default render option is [ValueRenderOption.FORMATTED_VALUE].
+ * */
+fun Sheets.Spreadsheets.Values.Update.setResponseValueRenderOption(responseValueRenderOption: ValueRenderOption) =
+    setResponseValueRenderOption(responseValueRenderOption.name)
+
+/**
+ * Determines how values in the response should be rendered.
+ * The default render option is [ValueRenderOption.FORMATTED_VALUE].
+ * */
+var Sheets.Spreadsheets.Values.Update.responseValueRenderOptionE: ValueRenderOption?
+    get() = responseValueRenderOption?.let { ValueRenderOption.valueOf(it) }
+    set(value) { responseValueRenderOption = value?.name }

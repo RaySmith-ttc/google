@@ -3,7 +3,6 @@ package ru.raysmith.google.model.api
 import com.google.api.services.sheets.v4.Sheets
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesByDataFilterRequest
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest
-import ru.raysmith.google.snakeCased
 
 /** Determines how input data should be interpreted. */
 enum class ValueInputOption {
@@ -17,35 +16,46 @@ enum class ValueInputOption {
     USER_ENTERED
 }
 
-fun Sheets.Spreadsheets.Values.Update.setValueInputOption(valueInputOption: ValueInputOption) {
-    setValueInputOption(valueInputOption.snakeCased())
-}
 
-var Sheets.Spreadsheets.Values.Update.dateTimeRenderOptionE: ValueInputOption?
+/** How the input data should be interpreted. */
+fun Sheets.Spreadsheets.Values.Append.setValueInputOption(valueInputOption: ValueInputOption) =
+    setValueInputOption(valueInputOption.name)
+
+/** How the input data should be interpreted. */
+var Sheets.Spreadsheets.Values.Append.valueInputOptionE: ValueInputOption?
     get() = valueInputOption?.let { ValueInputOption.valueOf(it) }
-    set(value) { valueInputOption = value?.snakeCased() }
+    set(value) { valueInputOption = value?.name }
 
 
-fun BatchUpdateValuesByDataFilterRequest.setValueInputOption(valueInputOption: ValueInputOption) {
-    setValueInputOption(valueInputOption.snakeCased())
-}
 
-var BatchUpdateValuesByDataFilterRequest.dateTimeRenderOptionE: ValueInputOption?
+
+/** How the input data should be interpreted. */
+fun BatchUpdateValuesRequest.setValueInputOption(valueInputOption: ValueInputOption) =
+    setValueInputOption(valueInputOption.name)
+
+/** How the input data should be interpreted. */
+var BatchUpdateValuesRequest.valueInputOptionE: ValueInputOption?
     get() = valueInputOption?.let { ValueInputOption.valueOf(it) }
-    set(value) { valueInputOption = value?.snakeCased() }
+    set(value) { valueInputOption = value?.name }
 
-fun Sheets.Spreadsheets.Values.Append.setValueInputOption(valueInputOption: ValueInputOption) {
-    setValueInputOption(valueInputOption.snakeCased())
-}
 
-var Sheets.Spreadsheets.Values.Append.dateTimeRenderOptionE: ValueInputOption?
+
+/** How the input data should be interpreted. */
+fun BatchUpdateValuesByDataFilterRequest.setValueInputOption(valueInputOption: ValueInputOption) =
+    setValueInputOption(valueInputOption.name)
+
+/** How the input data should be interpreted. */
+var BatchUpdateValuesByDataFilterRequest.valueInputOptionE: ValueInputOption?
     get() = valueInputOption?.let { ValueInputOption.valueOf(it) }
-    set(value) { valueInputOption = value?.snakeCased() }
+    set(value) { valueInputOption = value?.name }
 
-fun BatchUpdateValuesRequest.setValueInputOption(valueInputOption: ValueInputOption) {
-    setValueInputOption(valueInputOption.snakeCased())
-}
 
-var BatchUpdateValuesRequest.dateTimeRenderOptionE: ValueInputOption?
+
+/** How the input data should be interpreted. */
+fun Sheets.Spreadsheets.Values.Update.setValueInputOption(valueInputOption: ValueInputOption) =
+    setValueInputOption(valueInputOption.name)
+
+/** How the input data should be interpreted. */
+var Sheets.Spreadsheets.Values.Update.valueInputOptionE: ValueInputOption?
     get() = valueInputOption?.let { ValueInputOption.valueOf(it) }
-    set(value) { valueInputOption = value?.snakeCased() }
+    set(value) { valueInputOption = value?.name }

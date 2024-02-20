@@ -17,6 +17,8 @@ enum class VerticalAlign  {
     BOTTOM
 }
 
+fun CellFormat.setVerticalAlignment(verticalAlignment: VerticalAlign) = setVerticalAlignment(verticalAlignment.name)
+
 var CellFormat.verticalAlignmentE: VerticalAlign?
     get() = this.verticalAlignment?.let { VerticalAlign.valueOf(it) }
     set(value) {

@@ -7,10 +7,10 @@ enum class PermissionRole {
     OWNER, ORGANIZER, FILE_ORGANIZER, WRITER, COMMENTER, READER
 }
 
-fun Permission.setRole(permissionRole: PermissionRole) {
-    setRole(permissionRole.snakeCased())
-}
+/** The role granted by this permission. */
+fun Permission.setRole(permissionRole: PermissionRole) = setRole(permissionRole.snakeCased())
 
+/** The role granted by this permission. */
 var Permission.roleE: PermissionRole?
     get() = role?.let { PermissionRole.valueOf(it) }
     set(value) { role = value?.snakeCased() }

@@ -1,11 +1,9 @@
 package ru.raysmith.google.model.api
 
-import com.google.api.services.sheets.v4.Sheets.Spreadsheets
-import com.google.api.services.sheets.v4.Sheets.Spreadsheets.Values.BatchUpdateByDataFilter
+import com.google.api.services.sheets.v4.Sheets
 import com.google.api.services.sheets.v4.model.BatchGetValuesByDataFilterRequest
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesByDataFilterRequest
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest
-import ru.raysmith.google.snakeCased
 
 /** Determines how dates should be rendered in the output. */
 enum class DateTimeRenderOption {
@@ -16,58 +14,128 @@ enum class DateTimeRenderOption {
     FORMATTED_STRING
 }
 
-fun Spreadsheets.Values.Get.setDateTimeRenderOption(dateTimeRenderOption: DateTimeRenderOption) {
-    setDateTimeRenderOption(dateTimeRenderOption.snakeCased())
-}
+/**
+ * Determines how dates, times, and durations in the response should be rendered. This is ignored if
+ * [responseValueRenderOption][Sheets.Spreadsheets.Values.Append.responseValueRenderOption] is
+ * [ValueRenderOption.FORMATTED_VALUE]. The default dateTime render option is [DateTimeRenderOption.SERIAL_NUMBER].
+ * */
+fun Sheets.Spreadsheets.Values.Append.setResponseDateTimeRenderOption(responseDateTimeRenderOption: DateTimeRenderOption) =
+    setResponseDateTimeRenderOption(responseDateTimeRenderOption.name)
 
-var Spreadsheets.Values.Get.dateTimeRenderOptionE: DateTimeRenderOption?
+/**
+ * Determines how dates, times, and durations in the response should be rendered. This is ignored if
+ * [responseValueRenderOption][Sheets.Spreadsheets.Values.Append.responseValueRenderOption] is
+ * [ValueRenderOption.FORMATTED_VALUE]. The default dateTime render option is [DateTimeRenderOption.SERIAL_NUMBER].
+ * */
+var Sheets.Spreadsheets.Values.Append.responseDateTimeRenderOptionE: DateTimeRenderOption?
+    get() = responseDateTimeRenderOption?.let { DateTimeRenderOption.valueOf(it) }
+    set(value) { responseDateTimeRenderOption = value?.name }
+
+
+
+/**
+ * How dates, times, and durations should be represented in the output. This is ignored if value_render_option is
+ * [ValueRenderOption.FORMATTED_VALUE]. The default dateTime render option is [DateTimeRenderOption.SERIAL_NUMBER].
+ * */
+fun Sheets.Spreadsheets.Values.BatchGet.setDateTimeRenderOption(dateTimeRenderOption: DateTimeRenderOption) =
+    setDateTimeRenderOption(dateTimeRenderOption.name)
+
+/**
+ * How dates, times, and durations should be represented in the output. This is ignored if value_render_option is
+ * [ValueRenderOption.FORMATTED_VALUE]. The default dateTime render option is [DateTimeRenderOption.SERIAL_NUMBER].
+ * */
+var Sheets.Spreadsheets.Values.BatchGet.dateTimeRenderOptionE: DateTimeRenderOption?
     get() = dateTimeRenderOption?.let { DateTimeRenderOption.valueOf(it) }
-    set(value) { dateTimeRenderOption = value?.snakeCased() }
+    set(value) { dateTimeRenderOption = value?.name }
 
-fun Spreadsheets.Values.BatchGet.setDateTimeRenderOption(dateTimeRenderOption: DateTimeRenderOption) {
-    setDateTimeRenderOption(dateTimeRenderOption.snakeCased())
-}
 
-var Spreadsheets.Values.BatchGet.dateTimeRenderOptionE: DateTimeRenderOption?
-    get() = dateTimeRenderOption?.let { DateTimeRenderOption.valueOf(it) }
-    set(value) { dateTimeRenderOption = value?.snakeCased() }
 
-fun BatchGetValuesByDataFilterRequest.setDateTimeRenderOption(dateTimeRenderOption: DateTimeRenderOption) {
-    setDateTimeRenderOption(dateTimeRenderOption.snakeCased())
-}
+/**
+ * How dates, times, and durations should be represented in the output. This is ignored if value_render_option is
+ * [ValueRenderOption.FORMATTED_VALUE]. The default dateTime render option is [DateTimeRenderOption.SERIAL_NUMBER].
+ * */
+fun BatchGetValuesByDataFilterRequest.setDateTimeRenderOption(dateTimeRenderOption: DateTimeRenderOption) =
+    setDateTimeRenderOption(dateTimeRenderOption.name)
 
+/**
+ * How dates, times, and durations should be represented in the output. This is ignored if value_render_option is
+ * [ValueRenderOption.FORMATTED_VALUE]. The default dateTime render option is [DateTimeRenderOption.SERIAL_NUMBER].
+ * */
 var BatchGetValuesByDataFilterRequest.dateTimeRenderOptionE: DateTimeRenderOption?
     get() = dateTimeRenderOption?.let { DateTimeRenderOption.valueOf(it) }
-    set(value) { dateTimeRenderOption = value?.snakeCased() }
+    set(value) { dateTimeRenderOption = value?.name }
 
-fun Spreadsheets.Values.Update.setResponseDateTimeRenderOption(responseDateTimeRenderOption: DateTimeRenderOption) {
-    setResponseDateTimeRenderOption(responseDateTimeRenderOption.snakeCased())
-}
 
+
+/**
+ * Determines how dates, times, and durations in the response should be rendered. This is ignored if
+ * [responseValueRenderOption][Sheets.Spreadsheets.Values.Append.responseValueRenderOption] is
+ * [ValueRenderOption.FORMATTED_VALUE]. The default dateTime render option is [DateTimeRenderOption.SERIAL_NUMBER].
+ * */
+fun BatchUpdateValuesRequest.setResponseDateTimeRenderOption(responseDateTimeRenderOption: DateTimeRenderOption) =
+    setResponseDateTimeRenderOption(responseDateTimeRenderOption.name)
+
+/**
+ * Determines how dates, times, and durations in the response should be rendered. This is ignored if
+ * [responseValueRenderOption][Sheets.Spreadsheets.Values.Append.responseValueRenderOption] is
+ * [ValueRenderOption.FORMATTED_VALUE]. The default dateTime render option is [DateTimeRenderOption.SERIAL_NUMBER].
+ * */
 var BatchUpdateValuesRequest.responseDateTimeRenderOptionE: DateTimeRenderOption?
     get() = responseDateTimeRenderOption?.let { DateTimeRenderOption.valueOf(it) }
-    set(value) { responseDateTimeRenderOption = value?.snakeCased() }
+    set(value) { responseDateTimeRenderOption = value?.name }
 
-fun BatchUpdateValuesRequest.setResponseDateTimeRenderOption(responseDateTimeRenderOption: DateTimeRenderOption) {
-    setResponseDateTimeRenderOption(responseDateTimeRenderOption.snakeCased())
-}
 
+
+/**
+ * Determines how dates, times, and durations in the response should be rendered. This is ignored if
+ * [responseValueRenderOption][Sheets.Spreadsheets.Values.Append.responseValueRenderOption] is
+ * [ValueRenderOption.FORMATTED_VALUE]. The default dateTime render option is [DateTimeRenderOption.SERIAL_NUMBER].
+ * */
+fun BatchUpdateValuesByDataFilterRequest.setResponseDateTimeRenderOption(responseDateTimeRenderOption: DateTimeRenderOption) =
+    setResponseDateTimeRenderOption(responseDateTimeRenderOption.name)
+
+/**
+ * Determines how dates, times, and durations in the response should be rendered. This is ignored if
+ * [responseValueRenderOption][Sheets.Spreadsheets.Values.Append.responseValueRenderOption] is
+ * [ValueRenderOption.FORMATTED_VALUE]. The default dateTime render option is [DateTimeRenderOption.SERIAL_NUMBER].
+ * */
 var BatchUpdateValuesByDataFilterRequest.responseDateTimeRenderOptionE: DateTimeRenderOption?
     get() = responseDateTimeRenderOption?.let { DateTimeRenderOption.valueOf(it) }
-    set(value) { responseDateTimeRenderOption = value?.snakeCased() }
+    set(value) { responseDateTimeRenderOption = value?.name }
 
-fun BatchUpdateValuesByDataFilterRequest.setResponseDateTimeRenderOption(responseDateTimeRenderOption: DateTimeRenderOption) {
-    setResponseDateTimeRenderOption(responseDateTimeRenderOption.snakeCased())
-}
 
-var Spreadsheets.Values.Update.responseDateTimeRenderOptionE: DateTimeRenderOption?
+
+/**
+ * Determines how dates, times, and durations in the response should be rendered. This is ignored if
+ * [responseValueRenderOption][Sheets.Spreadsheets.Values.Append.responseValueRenderOption] is
+ * [ValueRenderOption.FORMATTED_VALUE]. The default dateTime render option is [DateTimeRenderOption.SERIAL_NUMBER].
+ * */
+fun Sheets.Spreadsheets.Values.Get.setDateTimeRenderOption(dateTimeRenderOption: DateTimeRenderOption) =
+    setDateTimeRenderOption(dateTimeRenderOption.name)
+
+/**
+ * How dates, times, and durations should be represented in the output. This is ignored if value_render_option
+ * is [ValueRenderOption.FORMATTED_VALUE]. The default dateTime render option is [DateTimeRenderOption.SERIAL_NUMBER].
+ * */
+var Sheets.Spreadsheets.Values.Get.dateTimeRenderOptionE: DateTimeRenderOption?
+    get() = dateTimeRenderOption?.let { DateTimeRenderOption.valueOf(it) }
+    set(value) { dateTimeRenderOption = value?.name }
+
+
+
+/**
+ * Determines how dates, times, and durations in the response should be rendered. This is ignored if
+ * [responseValueRenderOption][Sheets.Spreadsheets.Values.Append.responseValueRenderOption] is
+ * [ValueRenderOption.FORMATTED_VALUE]. The default dateTime render option is [DateTimeRenderOption.SERIAL_NUMBER].
+ * */
+fun Sheets.Spreadsheets.Values.Update.setResponseDateTimeRenderOption(responseDateTimeRenderOption: DateTimeRenderOption) =
+    setResponseDateTimeRenderOption(responseDateTimeRenderOption.name)
+
+/**
+ * Determines how dates, times, and durations in the response should be rendered. This is ignored if
+ * [responseValueRenderOption][Sheets.Spreadsheets.Values.Append.responseValueRenderOption] is
+ * [ValueRenderOption.FORMATTED_VALUE]. The default dateTime render option is [DateTimeRenderOption.SERIAL_NUMBER].
+ * */
+var Sheets.Spreadsheets.Values.Update.responseDateTimeRenderOptionE: DateTimeRenderOption?
     get() = responseDateTimeRenderOption?.let { DateTimeRenderOption.valueOf(it) }
-    set(value) { responseDateTimeRenderOption = value?.snakeCased() }
-
-fun Spreadsheets.Values.Append.setResponseDateTimeRenderOption(responseDateTimeRenderOption: DateTimeRenderOption) {
-    setResponseDateTimeRenderOption(responseDateTimeRenderOption.snakeCased())
-}
-
-var Spreadsheets.Values.Append.responseDateTimeRenderOptionE: DateTimeRenderOption?
-    get() = responseDateTimeRenderOption?.let { DateTimeRenderOption.valueOf(it) }
-    set(value) { responseDateTimeRenderOption = value?.snakeCased() }
+    set(value) { responseDateTimeRenderOption = value?.name }

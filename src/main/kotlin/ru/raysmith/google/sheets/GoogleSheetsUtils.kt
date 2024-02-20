@@ -70,7 +70,7 @@ fun Spreadsheet.append(rows: List<RowData>, sheetId: Int, service: GoogleSheetsS
     )
 )
 
-fun Spreadsheet.refreshed(service: GoogleSheetsService) = service.SpreadSheets.get(spreadsheetId)
+fun Spreadsheet.refreshed(service: GoogleSheetsService) = service.Spreadsheets.get(spreadsheetId)
 
 val Sheet.sheetId get() = properties.sheetId
 

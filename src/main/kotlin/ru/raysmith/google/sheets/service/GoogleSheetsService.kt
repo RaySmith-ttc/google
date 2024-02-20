@@ -45,7 +45,7 @@ class GoogleSheetsService(val sheets: Sheets) {
     }
 
     val Sheets = SheetService(this, sheets)
-    val SpreadSheets = GoogleSpreadSheetsService(sheets.spreadsheets())
+    val Spreadsheets = GoogleSpreadsheetsService(sheets.spreadsheets())
 }
 
 fun List<List<Any>>.contains(value: Any, containsModeData: ContainsModeData = ContainsModeData.FULL) =

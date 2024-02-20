@@ -3,7 +3,6 @@ package ru.raysmith.google.model.api
 import com.google.api.services.sheets.v4.model.CellFormat
 import com.google.api.services.sheets.v4.model.SlicerSpec
 import com.google.api.services.sheets.v4.model.TextPosition
-import ru.raysmith.google.snakeCased
 
 /** The horizontal alignment of text in a cell. */
 enum class HorizontalAlign {
@@ -20,32 +19,33 @@ enum class HorizontalAlign {
     RIGHT
 }
 
-fun CellFormat.setHorizontalAlignment(horizontalAlign: HorizontalAlign) {
-    setHorizontalAlignment(horizontalAlign.snakeCased())
-}
+/** The horizontal alignment of the value in the cell. */
+fun CellFormat.setHorizontalAlignment(horizontalAlign: HorizontalAlign) =
+    setHorizontalAlignment(horizontalAlign.name)
 
+/** The horizontal alignment of the value in the cell. */
 var CellFormat.horizontalAlignmentE: HorizontalAlign?
-    get() = this.horizontalAlignment?.let { HorizontalAlign.valueOf(it) }
-    set(value) {
-        this.horizontalAlignment = value?.name
-    }
+    get() = horizontalAlignment?.let { HorizontalAlign.valueOf(it) }
+    set(value) { horizontalAlignment = value?.name }
 
-fun TextPosition.setHorizontalAlignment(horizontalAlign: HorizontalAlign) {
-    setHorizontalAlignment(horizontalAlign.snakeCased())
-}
 
+
+/** Horizontal alignment setting for the piece of text. */
+fun TextPosition.setHorizontalAlignment(horizontalAlign: HorizontalAlign) =
+    setHorizontalAlignment(horizontalAlign.name)
+
+/** Horizontal alignment setting for the piece of text. */
 var TextPosition.horizontalAlignmentE: HorizontalAlign?
-    get() = this.horizontalAlignment?.let { HorizontalAlign.valueOf(it) }
-    set(value) {
-        this.horizontalAlignment = value?.name
-    }
+    get() = horizontalAlignment?.let { HorizontalAlign.valueOf(it) }
+    set(value) { horizontalAlignment = value?.name }
 
-fun SlicerSpec.setHorizontalAlignment(horizontalAlign: HorizontalAlign) {
-    setHorizontalAlignment(horizontalAlign.snakeCased())
-}
 
+
+/** The horizontal alignment of title in the slicer. If unspecified, defaults to [HorizontalAlign.LEFT] */
+fun SlicerSpec.setHorizontalAlignment(horizontalAlign: HorizontalAlign) =
+    setHorizontalAlignment(horizontalAlign.name)
+
+/** The horizontal alignment of title in the slicer. If unspecified, defaults to [HorizontalAlign.LEFT] */
 var SlicerSpec.horizontalAlignmentE: HorizontalAlign?
-    get() = this.horizontalAlignment?.let { HorizontalAlign.valueOf(it) }
-    set(value) {
-        this.horizontalAlignment = value?.name
-    }
+    get() = horizontalAlignment?.let { HorizontalAlign.valueOf(it) }
+    set(value) { horizontalAlignment = value?.name }

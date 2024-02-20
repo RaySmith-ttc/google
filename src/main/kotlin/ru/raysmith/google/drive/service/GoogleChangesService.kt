@@ -1,7 +1,9 @@
 package ru.raysmith.google.drive.service
 
 import com.google.api.services.drive.Drive
-import com.google.api.services.drive.model.*
+import com.google.api.services.drive.model.ChangeList
+import com.google.api.services.drive.model.Channel
+import com.google.api.services.drive.model.StartPageToken
 
 class GoogleChangesService(val service: Drive.Changes) {
     fun list(pageToken: String, setup: Drive.Changes.List.() -> Unit = { }): ChangeList =

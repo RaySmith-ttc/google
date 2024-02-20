@@ -1,7 +1,6 @@
 package ru.raysmith.google.model.api
 
 import com.google.api.services.sheets.v4.Sheets
-import ru.raysmith.google.snakeCased
 
 /** Determines how existing data is changed when new data is input. */
 enum class InsertDataOption {
@@ -13,10 +12,11 @@ enum class InsertDataOption {
     INSERT_ROWS
 }
 
-fun Sheets.Spreadsheets.Values.Append.setInsertDataOption(insertDataOption: InsertDataOption) {
-    setInsertDataOption(insertDataOption.snakeCased())
-}
+/** How the input data should be inserted. */
+fun Sheets.Spreadsheets.Values.Append.setInsertDataOption(insertDataOption: InsertDataOption) =
+    setInsertDataOption(insertDataOption.name)
 
+/** How the input data should be inserted. */
 var Sheets.Spreadsheets.Values.Append.insertDataOptionE: InsertDataOption?
     get() = insertDataOption?.let { InsertDataOption.valueOf(it) }
-    set(value) { insertDataOption = value?.snakeCased() }
+    set(value) { insertDataOption = value?.name }
