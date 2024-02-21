@@ -7,6 +7,9 @@ import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest
 import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetResponse
 import com.google.api.services.sheets.v4.model.GetSpreadsheetByDataFilterRequest
 import com.google.api.services.sheets.v4.model.Spreadsheet
+import ru.raysmith.google.sheets.utils.ContainsModeData
+import ru.raysmith.google.sheets.utils.Range
+import ru.raysmith.google.sheets.utils.contains
 
 class GoogleSpreadsheetsService(val service: Sheets.Spreadsheets) {
     val DeveloperMetadata = GoogleSpreadsheetsDeveloperMetadataService(service.developerMetadata())

@@ -2,6 +2,7 @@ package ru.raysmith.google.sheets.service
 
 import com.google.api.services.sheets.v4.Sheets
 import com.google.api.services.sheets.v4.model.*
+import ru.raysmith.google.sheets.utils.Range
 
 class GoogleSheetsValuesService(val service: Sheets.Spreadsheets.Values) {
 

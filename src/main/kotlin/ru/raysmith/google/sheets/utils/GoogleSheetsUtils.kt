@@ -1,22 +1,12 @@
-package ru.raysmith.google.sheets
+package ru.raysmith.google.sheets.utils
 
 import com.google.api.services.sheets.v4.Sheets
 import com.google.api.services.sheets.v4.model.*
 import ru.raysmith.google.model.SheetData
 import ru.raysmith.google.model.api.ValueInputOption
+import ru.raysmith.google.sheets.dsl.appendCells
+import ru.raysmith.google.sheets.dsl.requests
 import ru.raysmith.google.sheets.service.GoogleSheetsService
-
-fun Spreadsheet.sheets(setup: SheetsBuilder.() -> Unit) {
-    val builder = object : SheetsBuilder {
-        private val all = mutableListOf<Sheet>()
-        override fun getAll(): List<Sheet> = all
-        override fun sheet(setup: Sheet.() -> Unit) {
-            all.add(Sheet().apply(setup))
-        }
-    }
-    
-    this.sheets = builder.apply(setup).getAll()
-}
 
 fun Spreadsheet.getRangeFromSheetId(sheetId: Int): String {
     return sheets.find { it.properties.sheetId == sheetId }?.properties?.title
@@ -62,12 +52,17 @@ fun Sheets.Spreadsheets.Values.Append.setValueInputOption(option: ValueInputOpti
 
 fun Spreadsheet.append(rows: List<RowData>, sheet: Sheet, service: GoogleSheetsService) = append(rows, sheet.properties.sheetId, service)
 fun Spreadsheet.append(rows: List<RowData>, sheetId: Int, service: GoogleSheetsService) = service.requests(
-    spreadsheetId, Request().setAppendCells(
-        AppendCellsRequest()
-            .setFields("*")
-            .setRows(rows)
-            .setSheetId(sheetId)
-    )
+    spreadsheetId, batchUpdateSpreadsheetRequest {
+        requests {
+            request {
+                appendCells {
+                    this.fields = "*"
+                    this.rows = rows
+                    this.sheetId = sheetId
+                }
+            }
+        }
+    }
 )
 
 fun Spreadsheet.refreshed(service: GoogleSheetsService) = service.Spreadsheets.get(spreadsheetId)
@@ -149,5 +144,5 @@ infix operator fun CellFormat.rem(other: CellFormat) = cellFormat {
 }
 
 fun BatchUpdateSpreadsheetRequest.request(setup: Request.() -> Unit) {
-    setRequests(requests.apply { add(ru.raysmith.google.sheets.request { setup() }) })
+    setRequests(requests.apply { add(ru.raysmith.google.sheets.utils.request { setup() }) })
 }

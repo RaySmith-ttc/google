@@ -1,4 +1,4 @@
-package ru.raysmith.google.sheets
+package ru.raysmith.google.sheets.utils
 
 import com.google.api.services.sheets.v4.model.*
 import ru.raysmith.google.sheets.service.GoogleSheetsService.Companion.Config.defaultCellFormat
@@ -8,12 +8,18 @@ fun cell(format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit) = C
     setup()
 }
 
+fun cellFormat(parent: CellFormat = defaultCellFormat, setup: CellFormat.() -> Unit): CellFormat {
+    return parent.clone().apply(setup)
+}
+
+@GoogleDSL
 fun RowData.cell(cell: CellData?) {
     if (cell != null) {
         setValues((getValues() ?: mutableListOf()).apply { add(cell) })
     } else emptyCell { }
 }
 
+@GoogleDSL
 fun RowData.cell(text: String?, format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit = {}) = cell(cell {
     userEnteredValue = ExtendedValue().setStringValue(text ?: "")
     userEnteredFormat(format.clone()) {
@@ -22,9 +28,14 @@ fun RowData.cell(text: String?, format: CellFormat = defaultCellFormat, setup: C
     setup()
 })
 
-fun RowData.emptyCell(format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit = {}) = cell(null, format, setup)
+@GoogleDSL
+fun RowData.emptyCell(format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit = {}) =
+    cell(null, format, setup)
 
-fun RowData.linkCell(text: String? = null, link: String? = null, format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit = {}) = cell(cell {
+@GoogleDSL
+fun RowData.linkCell(
+    text: String? = null, link: String? = null, format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit = {}
+) = cell(cell {
     if (link != null) {
         extendedValue {
             formulaValue = hyperlink(link, text ?: link)
@@ -39,9 +50,12 @@ fun RowData.linkCell(text: String? = null, link: String? = null, format: CellFor
     setup()
 })
 
-fun RowData.photoCell(url: String, format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit = {}) = cell(cell {
+@GoogleDSL
+fun RowData.imageCell(
+    url: String, format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit = {}
+) = cell(cell {
     extendedValue {
-        formulaValue = "=IMAGE(\"$url\")"
+        formulaValue = image(url)
     }
     userEnteredFormat(format.clone()) {
         setTextFormat(format.textFormat ?: TextFormat())
@@ -49,20 +63,17 @@ fun RowData.photoCell(url: String, format: CellFormat = defaultCellFormat, setup
     setup()
 })
 
-// -------------------------------------------------- DSL---------------------------------------------------------------
-
+@GoogleDSL
 fun CellData.extendedValue(setup: ExtendedValue.() -> Unit) {
     userEnteredValue = ExtendedValue().apply(setup)
 }
 
+@GoogleDSL
 fun CellData.userEnteredFormat(parent: CellFormat? = null, setup: CellFormat.() -> Unit) {
     userEnteredFormat = (parent ?: CellFormat()).apply(setup)
-}
-
-fun cellFormat(parent: CellFormat = defaultCellFormat, setup: CellFormat.() -> Unit): CellFormat {
-    return parent.clone().apply(setup)
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 
 fun hyperlink(link: String, text: String) = "=HYPERLINK(\"$link\";\"$text\")"
+fun image(url: String) = "=IMAGE(\"$url\")"

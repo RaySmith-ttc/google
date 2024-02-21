@@ -1,8 +1,9 @@
-package ru.raysmith.google.sheets
+package ru.raysmith.google.sheets.service
 
 import com.google.api.services.sheets.v4.Sheets
 import com.google.api.services.sheets.v4.model.*
-import ru.raysmith.google.sheets.service.GoogleSheetsService
+import ru.raysmith.google.sheets.utils.refreshed
+import ru.raysmith.google.sheets.utils.table
 
 class SheetService(private val spreadsheetService: GoogleSheetsService, val service: Sheets) {
 

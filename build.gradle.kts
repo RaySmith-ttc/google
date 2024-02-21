@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.util.archivesName
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     kotlin("jvm") version "1.9.10"
@@ -8,7 +10,7 @@ plugins {
 }
 
 group = "ru.raysmith"
-version = "1.1.0"
+version = "1.2.0"
 
 repositories {
     mavenCentral()
@@ -26,9 +28,7 @@ dependencies {
     implementation(libs.google.auth.oauth2)
 
     testImplementation(kotlin("test"))
-    testImplementation(libs.konsist)
-    testImplementation(libs.javaparser.core)
-    testImplementation(libs.javaparser.core.serialization)
+    testImplementation(libs.jsoup)
 }
 
 tasks {
@@ -99,6 +99,7 @@ nmcp {
         password.set(System.getenv("CENTRAL_SONATYPE_PASS"))
         publicationType.set("USER_MANAGED")
         publicationType.set("AUTOMATIC")
+        archivesName.set("${rootProject.name}-$version")
     }
 }
 

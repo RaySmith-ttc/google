@@ -5,13 +5,11 @@ import com.google.api.services.sheets.v4.SheetsScopes
 import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest
 import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetResponse
 import com.google.api.services.sheets.v4.model.CellFormat
-import com.google.api.services.sheets.v4.model.Request
 import com.google.auth.http.HttpCredentialsAdapter
 import com.google.auth.oauth2.GoogleCredentials
 import ru.raysmith.google.GoogleUtils
-import ru.raysmith.google.sheets.SheetService
-import ru.raysmith.google.sheets.cellFormat
-import ru.raysmith.google.sheets.textFormat
+import ru.raysmith.google.sheets.utils.cellFormat
+import ru.raysmith.google.sheets.utils.textFormat
 
 class GoogleSheetsService(val sheets: Sheets) {
 
@@ -38,81 +36,10 @@ class GoogleSheetsService(val sheets: Sheets) {
         }
     }
 
-    fun requests(spreadsheetId: String, vararg requests: Request): BatchUpdateSpreadsheetResponse {
-        return sheets.spreadsheets().batchUpdate(spreadsheetId, BatchUpdateSpreadsheetRequest().apply {
-            this.requests = requests.toList()
-        }).execute()
+    fun requests(spreadsheetId: String, content: BatchUpdateSpreadsheetRequest): BatchUpdateSpreadsheetResponse {
+        return sheets.spreadsheets().batchUpdate(spreadsheetId, content).execute()
     }
 
     val Sheets = SheetService(this, sheets)
     val Spreadsheets = GoogleSpreadsheetsService(sheets.spreadsheets())
 }
-
-fun List<List<Any>>.contains(value: Any, containsModeData: ContainsModeData = ContainsModeData.FULL) =
-    findRow(value, containsModeData) != null
-
-fun List<List<Any>>.findRow(value: Any, containsModeData: ContainsModeData = ContainsModeData.FULL) = find { row ->
-    row.any {
-        when(containsModeData.mode) {
-            ContainsMode.FULL -> it == value
-            ContainsMode.PATH -> it is String && value is String && it.contains(value, ignoreCase = containsModeData.ignoreCase)
-            ContainsMode.START_WITH -> it is String && value is String && it.startsWith(value, ignoreCase = containsModeData.ignoreCase)
-            ContainsMode.END_WITH -> it is String && value is String && it.endsWith(value, ignoreCase = containsModeData.ignoreCase)
-            ContainsMode.MATCH -> it is String && value is String && it.matches(value.toRegex())
-        }
-    }
-}
-
-fun List<Any>.columnIndex(value: Any, containsModeData: ContainsModeData = ContainsModeData.FULL) = indexOfFirst {
-    when(containsModeData.mode) {
-        ContainsMode.FULL -> it == value
-        ContainsMode.PATH -> it is String && value is String && it.contains(value, ignoreCase = containsModeData.ignoreCase)
-        ContainsMode.START_WITH -> it is String && value is String && it.startsWith(value, ignoreCase = containsModeData.ignoreCase)
-        ContainsMode.END_WITH -> it is String && value is String && it.endsWith(value, ignoreCase = containsModeData.ignoreCase)
-        ContainsMode.MATCH -> it is String && value is String && it.matches(value.toRegex())
-    }
-}
-
-class ContainsModeData private constructor(val mode: ContainsMode, val ignoreCase: Boolean = true) {
-    companion object {
-        val FULL = ContainsModeData(ContainsMode.FULL)
-        val PATH = ContainsModeData(ContainsMode.PATH)
-        val START_WITH = ContainsModeData(ContainsMode.START_WITH)
-        val END_WITH = ContainsModeData(ContainsMode.END_WITH)
-        val MATCH = ContainsModeData(ContainsMode.MATCH)
-    }
-    
-    fun ignoreCase(value: Boolean) = ContainsModeData(mode, value)
-    
-    fun <T> findIn(data: List<T>, value: Any) = data.find {
-        when(mode) {
-            ContainsMode.FULL -> it == value
-            ContainsMode.PATH -> it is String && value is String && it.contains(value, ignoreCase = ignoreCase)
-            ContainsMode.START_WITH -> it is String && value is String && it.startsWith(value, ignoreCase = ignoreCase)
-            ContainsMode.END_WITH -> it is String && value is String && it.endsWith(value, ignoreCase = ignoreCase)
-            ContainsMode.MATCH -> it is String && value is String && it.matches(value.toRegex())
-        }
-    }
-}
-
-enum class ContainsMode {
-    FULL, PATH, START_WITH, END_WITH, MATCH
-}
-
-data class Range(val sheet: String? = null, val cells: String? = null) {
-    companion object {
-        val DEFAULT = Range("Sheet1", null)
-    }
-    
-    override fun toString(): String = "${sheet?.let { "'$it'" } ?: ""}${if (sheet != null && cells != null) "!" else ""}${cells ?: ""}"
-}
-enum class RangeMode {
-    SHEET, CELLS
-}
-fun String.toRange(mode: RangeMode = RangeMode.SHEET) = when(mode) {
-    RangeMode.SHEET -> Range(this, null)
-    RangeMode.CELLS -> Range(null, this)
-}
-
-
-

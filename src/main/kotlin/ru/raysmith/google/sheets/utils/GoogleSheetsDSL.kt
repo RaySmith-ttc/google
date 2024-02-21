@@ -1,4 +1,4 @@
-package ru.raysmith.google.sheets
+package ru.raysmith.google.sheets.utils
 
 import com.google.api.services.sheets.v4.model.*
 
