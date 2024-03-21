@@ -20,8 +20,8 @@ fun RowData.cell(cell: CellData?) {
 }
 
 @GoogleDSL
-fun RowData.cell(text: String?, format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit = {}) = cell(cell {
-    userEnteredValue = ExtendedValue().setStringValue(text ?: "")
+fun RowData.cell(value: String?, format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit = {}) = cell(cell {
+    userEnteredValue = ExtendedValue().setStringValue(value)
     userEnteredFormat(format.clone()) {
         setTextFormat(format.textFormat ?: TextFormat())
     }
@@ -29,8 +29,36 @@ fun RowData.cell(text: String?, format: CellFormat = defaultCellFormat, setup: C
 })
 
 @GoogleDSL
+fun RowData.cell(value: Double?, format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit = {}) = cell(cell {
+    userEnteredValue = ExtendedValue().setNumberValue(value)
+    userEnteredFormat(format.clone()) {
+        setTextFormat(format.textFormat ?: TextFormat())
+    }
+    setup()
+})
+
+@GoogleDSL
+fun RowData.cell(value: Boolean?, format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit = {}) = cell(cell {
+    userEnteredValue = ExtendedValue().setBoolValue(value)
+    userEnteredFormat(format.clone()) {
+        setTextFormat(format.textFormat ?: TextFormat())
+    }
+    setup()
+})
+
+@GoogleDSL
+fun RowData.cell(value: ErrorValue?, format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit = {}) = cell(cell {
+    userEnteredValue = ExtendedValue().setErrorValue(value)
+    userEnteredFormat(format.clone()) {
+        setTextFormat(format.textFormat ?: TextFormat())
+    }
+    setup()
+})
+
+private val nullString: String? = null
+@GoogleDSL
 fun RowData.emptyCell(format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit = {}) =
-    cell(null, format, setup)
+    cell(nullString, format, setup)
 
 @GoogleDSL
 fun RowData.linkCell(
