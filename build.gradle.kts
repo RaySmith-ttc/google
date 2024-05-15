@@ -95,7 +95,6 @@ nmcp {
     publish("release") {
         username.set(System.getenv("CENTRAL_SONATYPE_USER"))
         password.set(System.getenv("CENTRAL_SONATYPE_PASS"))
-        publicationType.set("USER_MANAGED")
         publicationType.set("AUTOMATIC")
     }
 }
