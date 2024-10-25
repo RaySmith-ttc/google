@@ -31,23 +31,47 @@ enum class ContainsMode {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-fun List<List<Any>>.contains(value: Any, containsModeData: ContainsModeData = ContainsModeData.FULL) =
-    findRow(value, containsModeData) != null
+fun List<List<Value>>.contains(value: Any, containsModeData: ContainsModeData = ContainsModeData.FULL, onRaw: (Value) -> Any? = { it }) =
+    findRow(value, containsModeData, onRaw) != null
 
-fun List<List<Any>>.findRow(value: Any, containsModeData: ContainsModeData = ContainsModeData.FULL) = find { row ->
+fun List<List<Value>>.findRow(value: Any, containsModeData: ContainsModeData = ContainsModeData.FULL, onRaw: (Value) -> Any? = { it }) = find { row ->
     row.any {
-        it.equals(value, containsModeData)
+        it.equals(value, containsModeData, onRaw)
     }
 }
 
-fun List<Any>.columnIndex(value: Any, containsModeData: ContainsModeData = ContainsModeData.FULL) = indexOfFirst {
-    it.equals(value, containsModeData)
+fun List<List<Value>>.rowIndex(value: Any, columnIndex: Int? = null, containsModeData: ContainsModeData = ContainsModeData.FULL, onRaw: (Value) -> Any? = { it }) = indexOfFirst {
+    if (columnIndex != null) {
+        if (it.lastIndex < columnIndex) {
+            return@indexOfFirst false
+        }
+
+        it[columnIndex].equals(value, containsModeData, onRaw)
+    } else {
+        it.any { it.equals(value, containsModeData, onRaw) }
+    }
 }
 
-private fun Any.equals(other: Any, containsModeData: ContainsModeData) =  when(containsModeData.mode) {
-    ContainsMode.FULL -> this == other
-    ContainsMode.PATH -> this is String && other is String && contains(other, ignoreCase = containsModeData.ignoreCase)
-    ContainsMode.START_WITH -> this is String && other is String && startsWith(other, ignoreCase = containsModeData.ignoreCase)
-    ContainsMode.END_WITH -> this is String && other is String && endsWith(other, ignoreCase = containsModeData.ignoreCase)
-    ContainsMode.MATCH -> this is String && other is String && matches(other.toRegex())
+fun List<Value>.columnIndex(value: Any, containsModeData: ContainsModeData = ContainsModeData.FULL, onRaw: (Value) -> Any? = { it }) = indexOfFirst {
+    it.equals(value, containsModeData, onRaw)
+}
+
+private fun Value.equals(other: Any, containsModeData: ContainsModeData, onRaw: (Value) -> Any? = { it }) = when(containsModeData.mode) {
+    ContainsMode.FULL -> onRaw(this) == other
+    ContainsMode.PATH -> {
+        val value = onRaw(this)
+        value is String && other is String && value.contains(other, ignoreCase = containsModeData.ignoreCase)
+    }
+    ContainsMode.START_WITH -> {
+        val value = onRaw(this)
+        value is String && other is String && value.startsWith(other, ignoreCase = containsModeData.ignoreCase)
+    }
+    ContainsMode.END_WITH -> {
+        val value = onRaw(this)
+        value is String && other is String && value.endsWith(other, ignoreCase = containsModeData.ignoreCase)
+    }
+    ContainsMode.MATCH -> {
+        val value = onRaw(this)
+        value is String && other is String && value.matches(other.toRegex())
+    }
 }

@@ -7,6 +7,7 @@ import ru.raysmith.google.model.api.ValueInputOption
 import ru.raysmith.google.sheets.dsl.appendCells
 import ru.raysmith.google.sheets.dsl.requests
 import ru.raysmith.google.sheets.service.GoogleSheetsService
+import ru.raysmith.google.sheets.service.GoogleSpreadsheetsService
 
 fun Spreadsheet.getRangeFromSheetId(sheetId: Int): String {
     return sheets.find { it.properties.sheetId == sheetId }?.properties?.title
@@ -65,7 +66,7 @@ fun Spreadsheet.append(rows: List<RowData>, sheetId: Int, service: GoogleSheetsS
     }
 )
 
-fun Spreadsheet.refreshed(service: GoogleSheetsService) = service.Spreadsheets.get(spreadsheetId)
+fun Spreadsheet.refreshed(service: GoogleSpreadsheetsService) = service.get(spreadsheetId)
 
 val Sheet.sheetId get() = properties.sheetId
 
@@ -143,6 +144,33 @@ infix operator fun CellFormat.rem(other: CellFormat) = cellFormat {
     wrapStrategy = select { wrapStrategy }
 }
 
-fun BatchUpdateSpreadsheetRequest.request(setup: Request.() -> Unit) {
-    setRequests(requests.apply { add(ru.raysmith.google.sheets.utils.request { setup() }) })
+/**
+ * Returns index of column.
+ *
+ * Examples:
+ * ```
+ * getGoogleSheetColumnIndex("A") // returns 0
+ * getGoogleSheetColumnIndex("B") // returns 1
+ * getGoogleSheetColumnIndex("AA") // returns 26
+ * ```
+ * */
+fun getGoogleSheetColumnIndex(s: String): Int {
+    var index = 0
+    for (ch in s) {
+        index = index * 26 + (ch.code and 31)
+    }
+    return index - 1
+}
+
+/**
+ * Returns index range of columns inclusive [column1] and exclusive [column2].
+ *
+ * Examples:
+ * ```
+ * getGoogleSheetColumnIndex("A", "A") // returns 0..1
+ * getGoogleSheetColumnIndex("B", "C") // returns 1..3
+ * ```
+ * */
+fun getGoogleSheetColumnsRange(column1: String, column2: String): IntRange {
+    return getGoogleSheetColumnIndex(column1)..(getGoogleSheetColumnIndex(column2) + 1)
 }

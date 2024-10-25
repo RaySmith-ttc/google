@@ -1,7 +1,7 @@
 package ru.raysmith.google.model.api
 
 import com.google.api.services.drive.model.Permission
-import ru.raysmith.google.snakeCased
+import ru.raysmith.google.utils.snakeCased
 
 enum class PermissionRole {
     OWNER, ORGANIZER, FILE_ORGANIZER, WRITER, COMMENTER, READER

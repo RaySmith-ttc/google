@@ -1,14 +1,15 @@
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    kotlin("jvm") version "1.9.10"
+    kotlin("jvm") version libs.versions.kotlin
     `maven-publish`
     signing
     alias(libs.plugins.nmcp)
     alias(libs.plugins.nexus.staging)
+    alias(libs.plugins.benManes.versions)
 }
 
 group = "ru.raysmith"
-version = "1.2.1"
+version = "2.0.0"
 
 repositories {
     mavenCentral()
@@ -23,10 +24,14 @@ dependencies {
     implementation(libs.google.authClient)
     implementation(libs.google.apis.sheets)
     implementation(libs.google.apis.drive)
+    implementation(libs.google.apis.gmail)
+    implementation(libs.google.apis.docs)
     implementation(libs.google.auth.oauth2)
 
     testImplementation(kotlin("test"))
     testImplementation(libs.jsoup)
+    testImplementation(libs.kotest.assertions)
+    testImplementation(libs.javax.mail)
 }
 
 tasks {
@@ -51,8 +56,6 @@ publishing {
                 name.set("Google")
                 url.set("https://github.com/RaySmith-ttc/google")
                 description.set("DSL wrappers for java google libs")
-
-
 
                 licenses {
                     license {

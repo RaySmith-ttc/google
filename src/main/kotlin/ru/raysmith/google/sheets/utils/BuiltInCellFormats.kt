@@ -7,7 +7,7 @@ import ru.raysmith.google.model.api.horizontalAlignmentE
 import ru.raysmith.google.model.api.wrapStrategyE
 
 val leftAlignmentTextCellFormat: CellFormat = cellFormat {
-    textFormat = textFormat {  }
+    textFormat = textFormat { }
     horizontalAlignmentE = HorizontalAlign.LEFT
     wrapStrategyE = WrapStrategy.WRAP
 }

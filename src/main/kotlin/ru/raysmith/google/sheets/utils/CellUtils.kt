@@ -2,6 +2,7 @@ package ru.raysmith.google.sheets.utils
 
 import com.google.api.services.sheets.v4.model.*
 import ru.raysmith.google.sheets.service.GoogleSheetsService.Companion.Config.defaultCellFormat
+import ru.raysmith.google.utils.GoogleDSL
 
 fun cell(format: CellFormat = defaultCellFormat, setup: CellData.() -> Unit) = CellData().apply {
     userEnteredFormat = format.clone()
