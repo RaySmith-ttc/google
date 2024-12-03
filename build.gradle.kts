@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "ru.raysmith"
-version = "2.0.0"
+version = "2.0.2"
 
 repositories {
     mavenCentral()
@@ -22,11 +22,11 @@ java {
 
 dependencies {
     implementation(libs.google.authClient)
-    implementation(libs.google.apis.sheets)
-    implementation(libs.google.apis.drive)
-    implementation(libs.google.apis.gmail)
-    implementation(libs.google.apis.docs)
     implementation(libs.google.auth.oauth2)
+    api(libs.google.apis.sheets)
+    api(libs.google.apis.drive)
+    api(libs.google.apis.gmail)
+    api(libs.google.apis.docs)
 
     testImplementation(kotlin("test"))
     testImplementation(libs.jsoup)

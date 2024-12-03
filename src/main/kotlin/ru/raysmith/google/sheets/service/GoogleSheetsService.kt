@@ -9,6 +9,7 @@ import ru.raysmith.google.sheets.utils.cellFormat
 import ru.raysmith.google.utils.GoogleUtils
 
 class GoogleSheetsService(service: Sheets) {
+
     companion object {
 		object Config {
 			var defaultCellFormat: CellFormat = cellFormat {
