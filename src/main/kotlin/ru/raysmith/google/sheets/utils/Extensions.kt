@@ -41,7 +41,7 @@ fun GoogleSpreadsheetsService.indexOfRow(value: Any, spreadsheetId: String, rang
     val valueRange = Values.get(spreadsheetId, range)
     val idColumnIndex = valueRange.firstOrNull()?.indexOfFirst { it.value == "#" }?.let { if (it == -1) 0 else it } ?: 0
     return valueRange.indexOfFirst {
-        it.size >= idColumnIndex + 1 && it[idColumnIndex] == value
+        it.size >= idColumnIndex + 1 && it[idColumnIndex].value == value
     }
 }
 
